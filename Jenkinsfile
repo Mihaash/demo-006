@@ -50,19 +50,14 @@ pipeline {
                 }
 
                 stage('Docker Build & Push') {
-                    agent any      // Must be a node with Docker installed
+                    agent any
                     steps {
                         script {
-
                             def tag = env.GIT_COMMIT.take(7)
                             echo "Using Docker Tag: ${tag}"
 
                             docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
-
-                                // Build Docker image from workspace
                                 def img = docker.build("initcron/sysfoo:${tag}")
-
-                                // Push tags
                                 img.push()
                                 img.push("latest")
                             }
