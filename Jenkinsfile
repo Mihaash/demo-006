@@ -18,10 +18,13 @@ pipeline {
     stage('package') {
       steps {
         echo 'package'
-        sh '''#Truncate the GIT_COMMIT to the first 7 characters
-GIT_SHORT_COMMIT=$(echo $GIT_COMMIT | cut -c 1-7)
-#Set the version using Maven
-mvn versions: set -DnewVersion="$GIT_SHORT_COMMIT"
+        sh '''# Truncate the GIT_COMMIT to the first 7 characters
+GIT_SHORT_COMMIT=$(echo "$GIT_COMMIT" | cut -c 1-7)
+
+# Set the version using Maven (NO SPACE)
+mvn versions:set -DnewVersion="$GIT_SHORT_COMMIT"
+
+# Commit the version change
 mvn versions:commit
 '''
         sh 'mvn package -DskipTests'
